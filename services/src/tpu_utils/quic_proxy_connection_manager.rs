@@ -17,7 +17,7 @@ use tokio::sync::broadcast::error::TryRecvError;
 use tokio::sync::{broadcast::Receiver, RwLock};
 
 use crate::quic_connection_utils::{QuicConnectionParameters, SkipServerVerification};
-use solana_lite_rpc_core::network_utils::apply_gso_workaround;
+use crate::network_utils::apply_gso_workaround;
 use solana_lite_rpc_core::structures::proxy_request_format::{TpuForwardingRequest, TxData};
 
 use crate::tpu_utils::quinn_auto_reconnect::AutoReconnect;
@@ -113,14 +113,14 @@ impl QuicProxyConnectionManager {
         let mut endpoint = {
             let client_socket = UdpSocket::bind("[::]:0").unwrap();
             let config = EndpointConfig::default();
-            Endpoint::new(config, None, client_socket, Arc::new(TokioRuntime))
+            Endpoint::new(config, None, client_socket, TokioRuntime)
                 .expect("create_endpoint quinn::Endpoint::new")
         };
 
         let mut crypto = rustls::ClientConfig::builder()
             .with_safe_defaults()
             .with_custom_certificate_verifier(SkipServerVerification::new())
-            .with_client_auth_cert(vec![certificate], key)
+            .with_single_cert(vec![certificate], key)
             .expect("Failed to set QUIC client certificates");
 
         crypto.enable_early_data = true;

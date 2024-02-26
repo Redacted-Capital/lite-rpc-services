@@ -1,5 +1,6 @@
 pub mod data_caching_service;
 pub mod metrics_capture;
+pub mod network_utils;
 pub mod prometheus_sync;
 pub mod quic_connection;
 pub mod quic_connection_utils;
