@@ -57,7 +57,7 @@ async-channel = "1.8.0"
 
 quinn = "0.9.3"
 #quinn-proto = "0.10.5"
-rustls = { version = "0.20.8", default-features = false, features = ["quic"] }
+rustls = { version = "^0.20.8", default-features = false, features = ["quic"] }
 
 solana-lite-rpc-core = {git  = "https://github.com/blockworks-foundation/lite-rpc.git", tag = "v0.2.3"}
 solana-lite-rpc-cluster-endpoints = {git  = "https://github.com/blockworks-foundation/lite-rpc.git", tag = "v0.2.3"}
