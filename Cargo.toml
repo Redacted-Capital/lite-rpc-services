@@ -55,9 +55,9 @@ lazy_static = "1.4.0"
 dotenv = "0.15.0"
 async-channel = "1.8.0"
 
-quinn = "0.10.2"
-quinn-proto = "0.10.5"
-rustls = { version = "0.21.7", default-features = false, features = ["quic"] }
+quinn = "0.9.3"
+#quinn-proto = "0.10.5"
+rustls = { version = "0.20.8", default-features = false, features = ["quic"] }
 
 solana-lite-rpc-core = {git  = "https://github.com/blockworks-foundation/lite-rpc.git", tag = "v0.2.3"}
 solana-lite-rpc-cluster-endpoints = {git  = "https://github.com/blockworks-foundation/lite-rpc.git", tag = "v0.2.3"}
@@ -70,3 +70,13 @@ solana-lite-rpc-accounts = {git  = "https://github.com/blockworks-foundation/lit
 async-trait = "0.1.68"
 yellowstone-grpc-client = { git = "https://github.com/rpcpool/yellowstone-grpc.git", tag = "v1.11.1+solana.1.16.21" }
 yellowstone-grpc-proto = { git = "https://github.com/rpcpool/yellowstone-grpc.git", tag = "v1.11.1+solana.1.16.21" }
+
+[patch.crates-io]
+solana-program = { git = "https://github.com/jito-foundation/jito-solana.git", tag = "v1.16.21-jito" }
+solana-sdk = { git = "https://github.com/jito-foundation/jito-solana.git", tag = "v1.16.21-jito" }  
+solana-client = { git = "https://github.com/jito-foundation/jito-solana.git", tag = "v1.16.21-jito" }  
+solana-rpc-client-api = { git = "https://github.com/jito-foundation/jito-solana.git", tag = "v1.16.21-jito" }
+solana-zk-token-sdk = { git = "https://github.com/jito-foundation/jito-solana.git", tag = "v1.16.21-jito" }
+solana-pubsub-client = { git = "https://github.com/jito-foundation/jito-solana.git", tag = "v1.16.21-jito" }
+solana-streamer = { git = "https://github.com/jito-foundation/jito-solana.git", tag = "v1.16.21-jito" }
+solana-transaction-status = { git = "https://github.com/jito-foundation/jito-solana.git", tag = "v1.16.21-jito" }

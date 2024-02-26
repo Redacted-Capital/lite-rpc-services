@@ -1,10 +1,10 @@
+use crate::network_utils::apply_gso_workaround;
 use log::trace;
 use prometheus::{core::GenericGauge, opts, register_int_gauge};
 use quinn::{
     ClientConfig, Connection, ConnectionError, Endpoint, EndpointConfig, IdleTimeout, SendStream,
     TokioRuntime, TransportConfig, VarInt,
 };
-use solana_lite_rpc_core::network_utils::apply_gso_workaround;
 use solana_sdk::pubkey::Pubkey;
 use std::{
     net::{IpAddr, Ipv4Addr, SocketAddr},
@@ -57,26 +57,28 @@ impl QuicConnectionUtils {
     pub fn create_endpoint(certificate: rustls::Certificate, key: rustls::PrivateKey) -> Endpoint {
         const DATAGRAM_RECEIVE_BUFFER_SIZE: usize = 64 * 1024 * 1024;
         const DATAGRAM_SEND_BUFFER_SIZE: usize = 64 * 1024 * 1024;
-        const INITIAL_MAXIMUM_TRANSMISSION_UNIT: u16 = MINIMUM_MAXIMUM_TRANSMISSION_UNIT;
-        const MINIMUM_MAXIMUM_TRANSMISSION_UNIT: u16 = 1280;
+        // const INITIAL_MAXIMUM_TRANSMISSION_UNIT: u16 = MINIMUM_MAXIMUM_TRANSMISSION_UNIT;
+        // const MINIMUM_MAXIMUM_TRANSMISSION_UNIT: u16 = 1280;
 
         let mut endpoint = {
             let client_socket =
                 solana_net_utils::bind_in_range(IpAddr::V4(Ipv4Addr::UNSPECIFIED), (8000, 10000))
                     .expect("create_endpoint bind_in_range")
                     .1;
-            let mut config = EndpointConfig::default();
-            config
-                .max_udp_payload_size(MINIMUM_MAXIMUM_TRANSMISSION_UNIT)
-                .expect("Should set max MTU");
-            quinn::Endpoint::new(config, None, client_socket, Arc::new(TokioRuntime))
+            let config = EndpointConfig::default();
+            // config
+            //     .max_udp_payload_size(MINIMUM_MAXIMUM_TRANSMISSION_UNIT)
+            //     .expect("Should set max MTU");
+            // quinn::Endpoint::new(config, None, client_socket, Arc::new(TokioRuntime))
+            //     .expect("create_endpoint quinn::Endpoint::new")
+            quinn::Endpoint::new(config, None, client_socket, TokioRuntime)
                 .expect("create_endpoint quinn::Endpoint::new")
         };
 
         let mut crypto = rustls::ClientConfig::builder()
             .with_safe_defaults()
             .with_custom_certificate_verifier(Arc::new(SkipServerVerification {}))
-            .with_client_auth_cert(vec![certificate], key)
+            .with_single_cert(vec![certificate], key)
             .unwrap();
         crypto.enable_early_data = true;
         crypto.alpn_protocols = vec![ALPN_TPU_PROTOCOL_ID.to_vec()];
@@ -89,11 +91,11 @@ impl QuicConnectionUtils {
         transport_config.keep_alive_interval(Some(Duration::from_millis(500)));
         transport_config.datagram_receive_buffer_size(Some(DATAGRAM_RECEIVE_BUFFER_SIZE));
         transport_config.datagram_send_buffer_size(DATAGRAM_SEND_BUFFER_SIZE);
-        transport_config.initial_mtu(INITIAL_MAXIMUM_TRANSMISSION_UNIT);
+        // transport_config.initial_mtu(INITIAL_MAXIMUM_TRANSMISSION_UNIT);
         transport_config.max_concurrent_bidi_streams(VarInt::from(0u8));
         transport_config.max_concurrent_uni_streams(VarInt::from(0u8));
-        transport_config.min_mtu(MINIMUM_MAXIMUM_TRANSMISSION_UNIT);
-        transport_config.mtu_discovery_config(None);
+        // transport_config.min_mtu(MINIMUM_MAXIMUM_TRANSMISSION_UNIT);
+        // transport_config.mtu_discovery_config(None);
         apply_gso_workaround(&mut transport_config);
         config.transport_config(Arc::new(transport_config));
 

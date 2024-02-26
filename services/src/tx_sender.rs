@@ -83,7 +83,7 @@ impl TxSender {
                 TxProps {
                     status: None,
                     last_valid_blockheight: transaction_info.last_valid_block_height,
-                    sent_by_lite_rpc: true,
+                    // sent_by_lite_rpc: true,
                 },
             );
 

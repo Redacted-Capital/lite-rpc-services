@@ -6,8 +6,8 @@ use crate::quic_connection_utils::QuicConnectionParameters;
 use crate::tpu_utils::quic_proxy_connection_manager::QuicProxyConnectionManager;
 use crate::tpu_utils::tpu_connection_path::TpuConnectionPath;
 use crate::tpu_utils::tpu_service::ConnectionManager::{DirectTpu, QuicProxy};
+use crate::network_utils::log_gso_workaround;
 
-use solana_lite_rpc_core::network_utils::log_gso_workaround;
 use solana_lite_rpc_core::stores::data_cache::DataCache;
 use solana_lite_rpc_core::structures::transaction_sent_info::SentTransactionInfo;
 use solana_lite_rpc_core::traits::leaders_fetcher_interface::LeaderFetcherInterface;
