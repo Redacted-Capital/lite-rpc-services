@@ -6,7 +6,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.2.4"
+version = "0.2.3"
 authors = ["gmgalactus <gmgalactus@mango.markets>", "Aniket Prajapati <contact@aniketprajapati.me>"]
 repository = "https://github.com/blockworks-foundation/lite-rpc"
 license = "AGPL"
